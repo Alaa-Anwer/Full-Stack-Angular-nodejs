@@ -1,0 +1,4 @@
+main {
+    min-height: calc(100vh - 60px);
+    background-color: #f8f9fa;
+}
