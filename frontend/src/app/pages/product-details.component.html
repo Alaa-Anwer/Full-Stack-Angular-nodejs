@@ -1,0 +1,81 @@
+<div class="container mt-5">
+  <button class="btn btn-secondary mb-4" (click)="goBack()">
+    &larr; Back to Products
+  </button>
+
+  @if (isLoading) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && product; as currentProduct) {
+    <div class="row">
+      <div class="col-md-6">
+        <img
+          [src]="currentProduct.image"
+          class="img-fluid"
+          alt="{{ currentProduct.title }}"
+        />
+      </div>
+      <div class="col-md-6">
+        <h1>{{ currentProduct.title }}</h1>
+        <p class="text-muted">{{ currentProduct.category }}</p>
+        <h3 class="text-primary mb-3">${{ currentProduct.price }}</h3>
+
+        <p><strong>Description:</strong></p>
+        <p>{{ currentProduct.description }}</p>
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+          <span class="stock-count"
+            ><strong>Stock Available:</strong>
+            {{ getSafeStock(currentProduct) }}</span
+          >
+          @if (isOutOfStock(currentProduct)) {
+            <span class="badge stock-badge out">Out of Stock</span>
+          } @else if (isLowStock(currentProduct)) {
+            <span class="badge stock-badge low">Low Stock</span>
+          } @else {
+            <span class="badge stock-badge in">In Stock</span>
+          }
+        </div>
+
+        <div class="mb-3">
+          <label for="quantity" class="form-label">Quantity:</label>
+          <input
+            type="number"
+            id="quantity"
+            class="form-control"
+            style="width: 100px"
+            [(ngModel)]="quantity"
+            min="1"
+            [max]="getSafeStock(currentProduct)"
+            [disabled]="isOutOfStock(currentProduct)"
+          />
+        </div>
+
+        <button
+          class="btn btn-success btn-lg"
+          (click)="addToCart()"
+          [disabled]="isOutOfStock(currentProduct) || quantity <= 0"
+        >
+          {{ isOutOfStock(currentProduct) ? "Out of Stock" : "Add to Cart" }}
+        </button>
+      </div>
+    </div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger mt-4">
+      {{ errorMessage }}
+    </div>
+  }
+
+  @if (successMessage) {
+    <div class="alert alert-success mt-4">
+      {{ successMessage }}
+    </div>
+  }
+</div>

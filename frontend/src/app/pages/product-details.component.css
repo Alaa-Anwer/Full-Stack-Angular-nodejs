@@ -1,0 +1,27 @@
+img {
+    max-height: 500px;
+    object-fit: cover;
+}
+
+.stock-count {
+    font-size: 0.95rem;
+    color: var(--bs-secondary-color);
+}
+
+.stock-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.5rem;
+}
+
+.stock-badge.in {
+    background-color: var(--bs-success);
+}
+
+.stock-badge.low {
+    background-color: var(--bs-warning);
+    color: var(--bs-dark);
+}
+
+.stock-badge.out {
+    background-color: var(--bs-danger);
+}

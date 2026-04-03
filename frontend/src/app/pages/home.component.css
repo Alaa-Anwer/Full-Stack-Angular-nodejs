@@ -1,0 +1,36 @@
+.card {
+    transition: transform 0.2s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.stock-count {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--bs-secondary-color);
+}
+
+.stock-badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.5rem;
+}
+
+.stock-badge.in {
+    background-color: var(--bs-success);
+}
+
+.stock-badge.low {
+    background-color: var(--bs-warning);
+    color: var(--bs-dark);
+}
+
+.stock-badge.out {
+    background-color: var(--bs-danger);
+}
