@@ -1,0 +1,133 @@
+<div class="container mt-5">
+  <h1 class="mb-4">Products</h1>
+
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search products..."
+        [(ngModel)]="searchQuery"
+        (ngModelChange)="onSearchChange()"
+      />
+    </div>
+    <div class="col-md-4">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Filter by category..."
+        [(ngModel)]="categoryFilter"
+        (ngModelChange)="onFilterChange()"
+      />
+    </div>
+    <div class="col-md-4">
+      <button class="btn btn-outline-secondary w-100" (click)="resetFilters()">
+        Reset Filters
+      </button>
+    </div>
+  </div>
+
+  @if (isLoading) {
+    <div class="text-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && products.length > 0) {
+    <div class="row">
+      @for (product of products; track product._id) {
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card h-100">
+            <img
+              [src]="product.image"
+              class="card-img-top"
+              alt="{{ product.title }}"
+            />
+            <div class="card-body">
+              <h5 class="card-title">{{ product.title }}</h5>
+              <p class="card-text text-muted">{{ product.category }}</p>
+              <p class="card-text">
+                {{ product.description | slice: 0 : 100 }}...
+              </p>
+              <h6 class="text-primary mb-3">${{ product.price }}</h6>
+              <div class="d-flex align-items-center gap-2 mb-3">
+                <span class="stock-count"
+                  >Stock: {{ getSafeStock(product) }}</span
+                >
+                @if (isOutOfStock(product)) {
+                  <span class="badge stock-badge out">Out of Stock</span>
+                } @else if (isLowStock(product)) {
+                  <span class="badge stock-badge low">Low Stock</span>
+                } @else {
+                  <span class="badge stock-badge in">In Stock</span>
+                }
+              </div>
+              <button
+                class="btn btn-sm btn-primary me-2"
+                [routerLink]="['/product', product._id]"
+                [disabled]="!product._id"
+              >
+                View Details
+              </button>
+              <button
+                class="btn btn-sm btn-success"
+                (click)="addToCart(product)"
+                [disabled]="isOutOfStock(product)"
+              >
+                {{ isOutOfStock(product) ? "Out of Stock" : "Add to Cart" }}
+              </button>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && products.length === 0) {
+    <div class="alert alert-info">No products available right now.</div>
+  }
+
+  @if (errorMessage) {
+    <div class="alert alert-danger">{{ errorMessage }}</div>
+  }
+  @if (successMessage) {
+    <div class="alert alert-success">
+      {{ successMessage }}
+    </div>
+  }
+
+  @if (!isLoading && !errorMessage && pagination) {
+    <nav class="mt-4" aria-label="Page navigation">
+      <ul class="pagination">
+        <li class="page-item" [ngClass]="{ disabled: currentPage === 1 }">
+          <button
+            class="page-link"
+            (click)="previousPage()"
+            [disabled]="currentPage === 1"
+          >
+            Previous
+          </button>
+        </li>
+        <li class="page-item active">
+          <span class="page-link"
+            >Page {{ currentPage }} of {{ pagination.totalPages }}</span
+          >
+        </li>
+        <li
+          class="page-item"
+          [ngClass]="{ disabled: currentPage === pagination.totalPages }"
+        >
+          <button
+            class="page-link"
+            (click)="nextPage()"
+            [disabled]="currentPage === pagination.totalPages"
+          >
+            Next
+          </button>
+        </li>
+      </ul>
+    </nav>
+  }
+</div>
